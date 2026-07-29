@@ -14,12 +14,11 @@ class RAGService:
 
     def __init__(self):
         self.embeddings = get_embedding_model()
-
         self.vector_store = load_vector_store(self.embeddings)
-
         self.llm = get_llm()
-
         self.structured_llm = self.llm.with_structured_output(ResponseSchema)
+
+        self.chat_history = []
 
 
     def ask(self, question: str) -> ResponseSchema:
@@ -41,10 +40,16 @@ class RAGService:
         context = build_context_from_documents(documents)
 
         prompt = build_prompt(
-            question,
-            context
+            question=question,
+            context=context,
+            chat_history=self.chat_history
         )
 
         response = self.structured_llm.invoke(prompt)
 
+        self.chat_history.append({
+            "user": question,
+            "assistant": response.answer
+        })
+        
         return response
