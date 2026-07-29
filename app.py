@@ -1,34 +1,32 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from rag.service import RAGService
 
-
-app = Flask(
-    __name__,
-    template_folder="web/templates",
-    static_folder="web/static"
-    )
+app = Flask(__name__, template_folder="web/templates", static_folder="web/static")
 
 rag = RAGService()
 
-@app.route("/", methods=["GET", "POST"])
+
+@app.route("/", methods=["GET"])
 def home():
-    answer = None
-    sources = []
+    return render_template('index.html')
 
-    if request.method == "POST":
-        question = request.form['question']
 
-        result = rag.ask(question)
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.get_json()
+    question = data.get('question', '')
 
-        answer = result.answer
-        sources = result.sources
+    if not question:
+        return jsonify({"error": "Empty question"}), 400
 
-    return render_template(
-        'index.html',
-        answer=answer,
-        sources=sources
-    )
+    result = rag.ask(question)
+    sources = [source.model_dump() for source in result.sources]
+
+    return jsonify({
+        'question': question,
+        'answer': result.answer,
+        'sources': sources
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
-    
