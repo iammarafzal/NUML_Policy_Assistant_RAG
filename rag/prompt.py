@@ -1,7 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate
 
 
-def get_formatted_prompt(question, context):
+def build_prompt(question, context):
 
     SYSTEM_PROMPT = """
     You are a NUML university Policy Assistant.

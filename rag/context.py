@@ -1,14 +1,18 @@
-def build_context(documents):
+def build_context_from_documents(retrived_results):
 
     context = ""
 
-    for doc in documents:
-        source = doc.metadata['source']
-        page = doc.metadata['page']
+    for item in retrived_results:
+        doc = item['document']
+        score = item['score']
+
+        source = doc.metadata.get('source', 'Unknown')
+        page = doc.metadata.get('page', 'Unknown')
 
         context += (
             f"Source: {source}\n"
             f"Page: {page}\n"
+            f"Relevance Score: {score}"
             f"{doc.page_content}\n\n"
         )
 

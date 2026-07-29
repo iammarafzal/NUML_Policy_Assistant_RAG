@@ -1,10 +1,10 @@
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 
 def create_vector_store(chunks, embeddings):
     vector_store = Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
-        persist_directory="chroma_db"
+        persist_directory="data/chroma_db"
     )
 
     vector_store.persist()
@@ -15,7 +15,7 @@ def create_vector_store(chunks, embeddings):
 def load_vector_store(embeddings):
     vector_store = Chroma(
         embedding_function=embeddings,
-        persist_directory="chroma_db",
+        persist_directory="data/chroma_db",
     )
 
 

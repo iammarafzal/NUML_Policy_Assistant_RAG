@@ -1,10 +1,11 @@
+from langchain_core.documents import Document
 
-def get_retrieved_and_filtered_documents(
+def retrieve_documents(
         vector_store,
         query,
         TOP_K = 5,
         SIMILARITY_THRESHOLD = 1.0
-    ) -> list:
+    ) -> list[tuple[Document, float]]:
     results = vector_store.similarity_search_with_score(
     query,
     k=TOP_K

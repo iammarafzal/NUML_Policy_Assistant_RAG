@@ -3,33 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NUML Policy Assistant</title>
+    <title>NUML Policy Assistant - Modern UI</title>
+    <!-- Link to the updated stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>NUML Policy Assistant</h1>
 
-    <form method="post">
-        <input type="text" name="question" placeholder="Ask a university policy question..." size="70" required>
-        <button type="submit">Ask</button>
-    </form>
+    <!-- Main Container for the Chat Interface -->
+    <div class="chat-container">
+        <header class="chat-header">
+            <h1>NUML Policy Assistant</h1>
+            <p>Ask your university policy questions below.</p>
+        </header>
 
-    {% if answer %}
-    <hr>
+        <!-- Chat Messages Area -->
+        <div class="chat-messages">
 
-    <h2>Answer</h2>
+            <!-- 1. Assistant Initial Greeting -->
+            <div class="message assistant-message">
+                <div class="message-content">
+                    <p>Hello! I am the NUML Policy Assistant. How can I help you today?</p>
+                </div>
+            </div>
 
-    <p>{{ answer }}</p>
+            <!-- 2. Conditional rendering for User Query and Assistant Answer -->
+            {% if answer %}
+            <!-- User's Question Bubble -->
+            <div class="message user-message">
+                <div class="message-content">
+                    <p>{{ request.form.question }}</p>
+                </div>
+            </div>
 
-    <h3>Sources</h3>
+            <!-- Assistant's Answer Bubble -->
+            <div class="message assistant-message">
+                <div class="message-content">
+                    <p>{{ answer }}</p>
 
-    <ul>
-        {% for source in sources %}
-        <li>
-            {{ source }}
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+                    <!-- Sources Section (Appears within the assistant's message) -->
+                    {% if sources %}
+                    <div class="sources-section">
+                        <h4>Source Documents</h4>
+                        <ul>
+                            {% for source in sources %}
+                            <li>
+                                <span class="source-doc">{{ source.document.split('/')[-1].replace('document\\', '') }}</span>
+                                <span class="source-page">(Page: {{ source.page }})</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- Input Area fixed at the bottom -->
+        <footer class="chat-input-footer">
+            <form method="post" class="input-form">
+                <input type="text" name="question" placeholder="Type your policy question here..." required>
+                <button type="submit" class="send-btn">
+                    <!-- Simple send icon -->
+                    <svg viewBox="0 0 24 24" width="24" height="24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+                </button>
+            </form>
+        </footer>
+    </div>
+
 </body>
 </html>
