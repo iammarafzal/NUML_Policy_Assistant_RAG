@@ -1,0 +1,19 @@
+body{
+    width:800px;
+    margin:auto;
+    font-family:Arial;
+    margin-top:40px;
+}
+
+input{
+    padding:12px;
+    width:600px;
+}
+
+button{
+    padding:12px;
+}
+
+h1{
+    color:#1e3a8a;
+}

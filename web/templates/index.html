@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUML Policy Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>NUML Policy Assistant</h1>
+
+    <form method="post">
+        <input type="text" name="question" placeholder="Ask a university policy question..." size="70" required>
+        <button type="submit">Ask</button>
+    </form>
+
+    {% if answer %}
+    <hr>
+
+    <h2>Answer</h2>
+
+    <p>{{ answer }}</p>
+
+    <h3>Sources</h3>
+
+    <ul>
+        {% for source in sources %}
+        <li>
+            {{ source }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
