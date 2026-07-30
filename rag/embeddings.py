@@ -1,12 +1,16 @@
-from langchain_huggingface import HuggingFaceEmbeddings
-from config.settings import EMBEDDING_MODEL
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from config.settings import EMBEDDING_MODEL, GEMINI_API_KEY
 
 
 def get_embedding_model():
-    return HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL,
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={
-            "normalize_embeddings": True
-        }
-    )
+    try:
+        return GoogleGenerativeAIEmbeddings(
+            model=EMBEDDING_MODEL,
+            google_api_key=GEMINI_API_KEY,
+            model_kwargs={"output_dimensionality": 768}
+        )
+    except TypeError:
+        return GoogleGenerativeAIEmbeddings(
+            model=EMBEDDING_MODEL,
+            google_api_key=GEMINI_API_KEY
+        )

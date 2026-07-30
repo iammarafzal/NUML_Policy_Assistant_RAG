@@ -1,6 +1,6 @@
 import chromadb
 from langchain_chroma import Chroma
-from config.settings import CHROMA_API_KEY, CHROMA_TENANT, CHROMA_DATABASE, CHROMA_DB_PATH
+from config.settings import CHROMA_API_KEY, CHROMA_TENANT, CHROMA_DATABASE, CHROMA_DB_PATH, CHROMA_COLLECTION_NAME
 
 def _get_chroma_client():
     """
@@ -29,6 +29,7 @@ def create_vector_store(chunks, embeddings):
     client, kwargs = _get_chroma_client()
     
     vector_store = Chroma.from_documents(
+        collection_name=CHROMA_COLLECTION_NAME,
         documents=chunks,
         embedding=embeddings,
         **kwargs
@@ -45,6 +46,7 @@ def load_vector_store(embeddings):
     client, kwargs = _get_chroma_client()
     
     vector_store = Chroma(
+        collection_name=CHROMA_COLLECTION_NAME,
         embedding_function=embeddings,
         **kwargs
     )

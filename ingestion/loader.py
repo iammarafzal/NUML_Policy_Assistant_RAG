@@ -2,8 +2,8 @@ from pathlib import Path
 from langchain_community.document_loaders import PyMuPDFLoader
 
 
-def load_documents():
-    data_dir = Path("data/documents")
+def load_documents(data_dir="data/documents"):
+    data_dir = Path(data_dir)
     docs = []
 
     for pdf_path in data_dir.glob('*.pdf'):

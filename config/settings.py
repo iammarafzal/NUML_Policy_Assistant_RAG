@@ -17,7 +17,9 @@ CHROMA_DATABASE = os.getenv("CHROMA_DATABASE", "default_database")
 
 DOCUMENT_PATH = "data/documents"
 
-EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', "BAAI/bge-small-en-v1.5")
+EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', "models/gemini-embedding-2")
 EMBEDDING_DIMENSION = 768
+CHROMA_COLLECTION_NAME = os.getenv("CHROMA_COLLECTION_NAME", "numl_policy_gemini2_768")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 LLM_MODEL = os.getenv("LLM_MODEL", "gemini-3.1-flash-lite")
