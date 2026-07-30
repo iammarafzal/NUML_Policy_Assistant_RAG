@@ -15,11 +15,12 @@ def home():
 def ask():
     data = request.get_json()
     question = data.get('question', '')
+    history = data.get('history', [])
 
     if not question:
         return jsonify({"error": "Empty question"}), 400
 
-    result = rag.ask(question)
+    result = rag.ask(question, chat_history=history)
     sources = [source.model_dump() for source in result.sources]
 
     return jsonify({
