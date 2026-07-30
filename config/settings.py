@@ -1,11 +1,23 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 TOP_K = 5
 
 SIMILARITY_THRESHOLD = 1.0
 
+# Local Chroma Database path
 CHROMA_DB_PATH = "data/chroma_db"
+
+# Chroma Cloud Settings (Optional, used if CHROMA_API_KEY is set)
+CHROMA_API_KEY = os.getenv("CHROMA_API_KEY")
+CHROMA_TENANT = os.getenv("CHROMA_TENANT", "default_tenant")
+CHROMA_DATABASE = os.getenv("CHROMA_DATABASE", "default_database")
 
 DOCUMENT_PATH = "data/documents"
 
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', "BAAI/bge-small-en-v1.5")
+EMBEDDING_DIMENSION = 768
 
-LLM_MODEL = "gemini-3.1-flash-lite"
+LLM_MODEL = os.getenv("LLM_MODEL", "gemini-3.1-flash-lite")
