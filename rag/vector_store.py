@@ -9,10 +9,10 @@ def _get_chroma_client():
     """
     if CHROMA_API_KEY:
         # Production: Chroma Cloud / Hosted Chroma
-        client = chromadb.HttpClient(
+        client = chromadb.CloudClient(
             tenant=CHROMA_TENANT,
             database=CHROMA_DATABASE,
-            headers={"x-chroma-token": CHROMA_API_KEY}
+            api_key=CHROMA_API_KEY
         )
         # We pass the client directly to Langchain
         return client, {"client": client}
