@@ -178,8 +178,8 @@ export default function ChatInterface() {
 
       let rawMarkdown = data.answer || "No response generated.";
       if (typeof rawMarkdown === 'string') {
-        // Fix any escaped newlines
-        rawMarkdown = rawMarkdown.replace(/\\n/g, '\n');
+        // Normalize stringified newlines and collapse 3+ newlines into a standard double break
+        rawMarkdown = rawMarkdown.replace(/\\n/g, '\n').replace(/\n{3,}/g, '\n\n');
       }
 
       setMessages(prev => [...prev, {
@@ -206,48 +206,50 @@ export default function ChatInterface() {
     <div className="flex flex-col h-screen w-full bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
 
       {/* Header */}
-      <header className="flex justify-between items-center px-4 py-2.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10 shadow-sm">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm border-2 border-white overflow-hidden shrink-0">
-            <img src={numlLogo} alt="NUML Logo" className="w-full h-full object-contain" />
+      <header className="sticky top-0 z-10 w-full backdrop-blur-md bg-white/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-white/10 shadow-sm">
+        <div className="flex justify-between items-center max-w-7xl mx-auto w-full px-6 sm:px-8 py-2.5">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm border-2 border-white overflow-hidden shrink-0">
+              <img src={numlLogo} alt="NUML Logo" className="w-full h-full object-contain" />
+            </div>
+            <div>
+              <h1 className="text-[15px] font-extrabold bg-gradient-to-br from-blue-900 to-blue-500 dark:from-blue-400 dark:to-blue-300 bg-clip-text text-transparent leading-tight mb-0.5">
+                NUML Policy Assistant
+              </h1>
+              {isServerWarm ? (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[9px] uppercase tracking-wider font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Online
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[9px] uppercase tracking-wider font-bold" title="Waking up server...">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Connecting...
+                </span>
+              )}
+            </div>
           </div>
-          <div>
-            <h1 className="text-[15px] font-extrabold bg-gradient-to-br from-blue-900 to-blue-500 dark:from-blue-400 dark:to-blue-300 bg-clip-text text-transparent leading-tight mb-0.5">
-              NUML Policy Assistant
-            </h1>
-            {isServerWarm ? (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[9px] uppercase tracking-wider font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Online
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[9px] uppercase tracking-wider font-bold" title="Waking up server...">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Connecting...
-              </span>
-            )}
-          </div>
-        </div>
 
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={toggleTheme}
-            className="w-8 h-8 rounded-full flex items-center justify-center border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all"
-            aria-label="Toggle Dark Mode"
-          >
-            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
-          <button
-            onClick={() => setShowClearModal(true)}
-            className="w-8 h-8 rounded-full flex items-center justify-center border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 dark:hover:bg-red-900/20 dark:hover:border-red-800 transition-all"
-            aria-label="Clear Chat History"
-          >
-            <Trash2 size={15} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              aria-label="Toggle Dark Mode"
+            >
+              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
+            <button
+              onClick={() => setShowClearModal(true)}
+              className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-white/10 hover:border-red-200 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+              aria-label="Clear Chat History"
+            >
+              <Trash2 size={15} />
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 flex flex-col items-center">
-        <div className="w-full max-w-3xl flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 pb-32 flex flex-col items-center">
+        <div className="max-w-3xl mx-auto w-full px-4 flex flex-col gap-3">
           {messages.map((msg, index) => (
             <div key={msg.id || index} className={`flex max-w-[85%] md:max-w-[80%] ${msg.role === 'user' ? 'self-end' : 'self-start'} animate-in slide-in-from-bottom-4 duration-300`}>
               <div className={`p-3 md:px-4 md:py-3 rounded-2xl shadow-sm text-[13.5px] leading-relaxed ${msg.role === 'user'
@@ -259,10 +261,37 @@ export default function ChatInterface() {
                 {msg.role === 'user' ? (
                   <p className="whitespace-pre-wrap">{msg.content}</p>
                 ) : (
-                  <div className="markdown-body text-[14px]">
+                  <div className="prose dark:prose-invert max-w-none break-words text-[14px]">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
+                        p: ({node, ...props}) => <p className="my-2 leading-relaxed" {...props} />,
+                        table: ({ node, ...props }) => (
+                          <div className="my-4 w-full overflow-hidden rounded-none border border-white/20 bg-white/5 shadow-sm">
+                            <table className="w-full border-collapse border-spacing-0 text-left text-sm !m-0 !p-0" {...props} />
+                          </div>
+                        ),
+                        thead: ({ node, ...props }) => (
+                          <thead className="bg-white/10 !m-0 !p-0" {...props} />
+                        ),
+                        tbody: ({ node, ...props }) => (
+                          <tbody className="divide-y divide-white/10 !m-0 !p-0" {...props} />
+                        ),
+                        tr: ({ node, ...props }) => (
+                          <tr className="even:bg-white/[0.02] hover:bg-white/[0.04] transition-colors !m-0 !p-0" {...props} />
+                        ),
+                        th: ({ node, ...props }) => (
+                          <th
+                            className="border-b border-r border-white/20 last:border-r-0 px-4 py-2.5 font-semibold text-white tracking-wider align-middle"
+                            {...props}
+                          />
+                        ),
+                        td: ({ node, ...props }) => (
+                          <td
+                            className="border-b border-r border-white/10 last:border-r-0 px-4 py-2.5 text-gray-200 align-middle"
+                            {...props}
+                          />
+                        ),
                         code({ node, inline, className, children, ...props }) {
                           const match = /language-(\w+)/.exec(className || '')
                           return !inline && match ? (
@@ -290,20 +319,30 @@ export default function ChatInterface() {
                       <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700">
                         <h4 className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-2 font-semibold">Reference Sources</h4>
                         <ul className="flex flex-wrap gap-2 m-0 p-0 list-none">
-                          {msg.sources.map((src, i) => {
-                            const docName = src.doc_title || src.document || src.doc || 'Document';
-                            return (
+                          {(() => {
+                            const uniqueSources = [];
+                            const seen = new Set();
+                            msg.sources.forEach(src => {
+                              const docName = src.doc_title || src.document || src.doc || 'Document';
+                              const page = src.page ?? 'N/A';
+                              const key = `${docName}-${page}`;
+                              if (!seen.has(key)) {
+                                seen.add(key);
+                                uniqueSources.push({ ...src, _docName: docName, _page: page });
+                              }
+                            });
+                            return uniqueSources.map((src, i) => (
                               <button
                                 key={i}
                                 onClick={() => setActiveSource(src)}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-500/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-[11px] rounded-lg transition-colors group cursor-pointer"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-500/50 hover:bg-blue-50 dark:hover:bg-white/10 text-[11px] rounded-lg transition-colors group cursor-pointer"
                               >
                                 <Bookmark size={12} className="text-blue-600 dark:text-blue-400 shrink-0" />
-                                <span className="font-semibold text-slate-700 dark:text-slate-300 truncate max-w-[150px]">{docName}</span>
-                                <span className="text-slate-500 dark:text-slate-400 shrink-0">Pg {src.page ?? 'N/A'}</span>
+                                <span className="font-semibold text-slate-700 dark:text-slate-300 truncate max-w-[150px]">{src._docName}</span>
+                                <span className="text-slate-500 dark:text-slate-400 shrink-0">Pg {src._page}</span>
                               </button>
-                            );
-                          })}
+                            ));
+                          })()}
                         </ul>
                       </div>
                     )}
