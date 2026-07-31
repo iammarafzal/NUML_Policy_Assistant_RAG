@@ -203,10 +203,10 @@ export default function ChatInterface() {
   const showSuggestions = messages.length === 1 && messages[0].role === 'assistant';
 
   return (
-    <div className="flex flex-col h-screen w-full bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
+    <div className="flex flex-col h-screen w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
 
       {/* Header */}
-      <header className="sticky top-0 z-10 w-full backdrop-blur-md bg-white/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-white/10 shadow-sm">
+      <header className="sticky top-0 z-50 w-full">
         <div className="flex justify-between items-center max-w-7xl mx-auto w-full px-6 sm:px-8 py-2.5">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm border-2 border-white overflow-hidden shrink-0">
@@ -248,15 +248,15 @@ export default function ChatInterface() {
       </header>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 pb-32 flex flex-col items-center">
-        <div className="max-w-3xl mx-auto w-full px-4 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto custom-scrollbar pb-36 flex flex-col">
+        <div className="w-full flex flex-col">
           {messages.map((msg, index) => (
-            <div key={msg.id || index} className={`flex max-w-[85%] md:max-w-[80%] ${msg.role === 'user' ? 'self-end' : 'self-start'} animate-in slide-in-from-bottom-4 duration-300`}>
-              <div className={`p-3 md:px-4 md:py-3 rounded-2xl shadow-sm text-[13.5px] leading-relaxed ${msg.role === 'user'
-                ? 'bg-blue-900 text-white rounded-br-sm'
+            <div key={msg.id || index} className={`flex w-full animate-in slide-in-from-bottom-4 duration-300 ${msg.role === 'user' ? 'justify-end my-4' : 'justify-center border-b border-slate-200 dark:border-white/5 py-6'}`}>
+              <div className={`text-[13.5px] leading-relaxed ${msg.role === 'user'
+                ? 'bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-3 mr-4 ml-auto max-w-[85%] shadow-sm'
                 : msg.isError
-                  ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800/50 rounded-bl-sm'
-                  : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-bl-sm'
+                  ? 'w-full max-w-3xl px-6 text-red-500'
+                  : 'w-full max-w-3xl px-6 text-slate-800 dark:text-slate-200'
                 }`}>
                 {msg.role === 'user' ? (
                   <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -376,8 +376,8 @@ export default function ChatInterface() {
           ))}
 
           {isLoading && (
-            <div className="flex max-w-[85%] md:max-w-[80%] self-start animate-in slide-in-from-bottom-4 duration-300">
-              <div className="p-3 md:px-4 md:py-3 rounded-2xl shadow-sm text-[13.5px] leading-relaxed bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-bl-sm flex items-center gap-1.5 min-h-[44px]">
+            <div className="flex w-full justify-center border-b border-slate-200 dark:border-white/5 py-6 animate-in slide-in-from-bottom-4 duration-300">
+              <div className="w-full max-w-3xl px-6 flex items-center gap-1.5 min-h-[44px]">
                 <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                 <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                 <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -413,7 +413,7 @@ export default function ChatInterface() {
       </div>
 
       {/* Input Area */}
-      <footer className="p-3 md:py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shrink-0 shadow-[0_-4px_12px_rgba(0,0,0,0.02)] flex flex-col items-center relative z-10">
+      <footer className="p-3 md:py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shrink-0 flex flex-col items-center relative z-10">
         <div className="w-full max-w-3xl flex flex-col">
           <div className="flex gap-2 items-end w-full">
             <textarea
@@ -434,12 +434,9 @@ export default function ChatInterface() {
               <Send size={18} className="ml-0.5" />
             </button>
           </div>
-          <div className="mt-2 text-center space-y-0.5">
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 opacity-90">
+          <div className="mt-2 text-center">
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 opacity-50">
               NUML Policy Assistant can make mistakes. Verify important policy details with official university documents.
-            </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 opacity-90">
-              © 2026 NUML Policy Assistant • Developed by <a href="https://linkedin.com/in/iammarafzal" target="_blank" rel="noreferrer" className="text-blue-700 dark:text-blue-400 font-semibold hover:underline">Ammar Afzal</a>
             </p>
           </div>
         </div>
