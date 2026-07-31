@@ -110,4 +110,23 @@ class RAGService:
 
         response = self.structured_llm.invoke(prompt)
 
-        return response
+        used_chunks = []
+        for chunk_id in response.chunk_ids:
+            try:
+                # Expecting format 'chunk_0', 'chunk_1', etc.
+                idx = int(chunk_id.split('_')[1])
+                if 0 <= idx < len(documents):
+                    doc, score = documents[idx]
+                    used_chunks.append({
+                        "id": chunk_id,
+                        "doc_title": doc.metadata.get('source', 'Unknown').split('/')[-1].split('\\')[-1],
+                        "page": doc.metadata.get('page', 'N/A'),
+                        "raw_text": doc.page_content
+                    })
+            except Exception:
+                pass
+
+        return {
+            "answer": response.answer,
+            "sources": used_chunks
+        }
