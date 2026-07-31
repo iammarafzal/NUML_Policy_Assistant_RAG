@@ -11,18 +11,23 @@ from rag.llm import get_llm
 from rag.schemas import ResponseSchema
 from config.settings import TOP_K
 
-def sanitize_markdown_tables(text: str) -> str:
-    """
-    Fixes LLM output where table rows are concatenated on a single line 
-    like: '| :--- | :--- | | 4 years | 6 |'
-    """
-    # Replace merged row boundaries ' | | ' or '||' with a proper newline
-    fixed_text = re.sub(r'\|\s*\|', '|\n|', text)
-    
-    # Ensure empty lines around table structures for clean GFM parsing
-    fixed_text = re.sub(r'([^\n])\n(\|[^\n]+\|)', r'\1\n\n\2', fixed_text)
-    
-    return fixed_text
+def sanitize_markdown_payload(text: str) -> str:
+    if not text or not isinstance(text, str):
+        return text
+
+    # 1. Standardize line breaks
+    cleaned = text.replace('\r\n', '\n').replace('\r', '\n')
+
+    # 2. Fix excessive newlines directly preceding a table
+    cleaned = re.sub(r'\n{3,}(\|[^\n]+\|)', r'\n\n\1', cleaned)
+
+    # 3. Remove interior empty lines between table rows (fixes space gaps inside table body)
+    cleaned = re.sub(r'(\|[^\n]+\|)\n\s*\n+(\|[^\n]+\|)', r'\1\n\2', cleaned)
+
+    # 4. Normalize spacing right after the table ends
+    cleaned = re.sub(r'(\|[^\n]+\|)\n{3,}', r'\1\n\n', cleaned)
+
+    return cleaned.strip()
 
 class RAGService:
 
@@ -146,6 +151,6 @@ class RAGService:
                 pass
 
         return {
-            "answer": sanitize_markdown_tables(response.answer),
+            "answer": sanitize_markdown_payload(response.answer),
             "sources": used_chunks
         }
