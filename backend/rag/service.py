@@ -11,6 +11,19 @@ from rag.llm import get_llm
 from rag.schemas import ResponseSchema
 from config.settings import TOP_K
 
+def sanitize_markdown_tables(text: str) -> str:
+    """
+    Fixes LLM output where table rows are concatenated on a single line 
+    like: '| :--- | :--- | | 4 years | 6 |'
+    """
+    # Replace merged row boundaries ' | | ' or '||' with a proper newline
+    fixed_text = re.sub(r'\|\s*\|', '|\n|', text)
+    
+    # Ensure empty lines around table structures for clean GFM parsing
+    fixed_text = re.sub(r'([^\n])\n(\|[^\n]+\|)', r'\1\n\n\2', fixed_text)
+    
+    return fixed_text
+
 class RAGService:
 
     # Maximum conversational turns to retain in memory and feed to the LLM
@@ -117,16 +130,22 @@ class RAGService:
                 idx = int(chunk_id.split('_')[1])
                 if 0 <= idx < len(documents):
                     doc, score = documents[idx]
+                    raw_page = doc.metadata.get('page', 0)
+                    try:
+                        display_page = int(raw_page) + 1
+                    except (ValueError, TypeError):
+                        display_page = 1
+
                     used_chunks.append({
                         "id": chunk_id,
                         "doc_title": doc.metadata.get('source', 'Unknown').split('/')[-1].split('\\')[-1],
-                        "page": doc.metadata.get('page', 'N/A'),
+                        "page": display_page,
                         "raw_text": doc.page_content
                     })
             except Exception:
                 pass
 
         return {
-            "answer": response.answer,
+            "answer": sanitize_markdown_tables(response.answer),
             "sources": used_chunks
         }

@@ -178,11 +178,8 @@ export default function ChatInterface() {
 
       let rawMarkdown = data.answer || "No response generated.";
       if (typeof rawMarkdown === 'string') {
-        // Fix any escaped newlines without breaking tables
+        // Fix any escaped newlines
         rawMarkdown = rawMarkdown.replace(/\\n/g, '\n');
-        
-        // Ensure tables have newlines before them if attached to text
-        rawMarkdown = rawMarkdown.replace(/([^\n])\n(\|[^\n]+\|)/g, '$1\n\n$2');
       }
 
       setMessages(prev => [...prev, {
