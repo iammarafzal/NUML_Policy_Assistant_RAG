@@ -15,24 +15,15 @@ def sanitize_markdown_payload(text: str) -> str:
     if not text or not isinstance(text, str):
         return text
 
-    # 1. Standardize line breaks
     cleaned = text.replace('\r\n', '\n').replace('\r', '\n')
-
-    # 2. Fix excessive newlines directly preceding a table
     cleaned = re.sub(r'\n{3,}(\|[^\n]+\|)', r'\n\n\1', cleaned)
-
-    # 3. Remove interior empty lines between table rows (fixes space gaps inside table body)
     cleaned = re.sub(r'(\|[^\n]+\|)\n\s*\n+(\|[^\n]+\|)', r'\1\n\2', cleaned)
-
-    # 4. Normalize spacing right after the table ends
     cleaned = re.sub(r'(\|[^\n]+\|)\n{3,}', r'\1\n\n', cleaned)
 
     return cleaned.strip()
 
 class RAGService:
-
-    # Maximum conversational turns to retain in memory and feed to the LLM
-    MAX_HISTORY_TURNS = 5  # Keeps memory lean and token usage under control
+    MAX_HISTORY_TURNS = 5
 
     def __init__(self):
         self.embeddings = get_embedding_model()
@@ -40,9 +31,6 @@ class RAGService:
         self.llm = get_llm()
         self.structured_llm = self.llm.with_structured_output(ResponseSchema)
 
-        # -------------------------------------------------------------
-        # Initialize BM25 Retriever once for hybrid search
-        # -------------------------------------------------------------
         all_doc_dicts = self.vector_store.get(include=["documents", "metadatas"])
         
         from langchain_core.documents import Document
@@ -72,8 +60,6 @@ class RAGService:
         if not chat_history:
             return question
 
-        # Token Optimization: Only slice the recent N turns for query rewriting
-        # chat_history format from frontend: [{'role': 'user', 'content': '...'}, {'role': 'assistant', 'content': '...'}]
         recent_history = chat_history[-(self.MAX_HISTORY_TURNS * 2):]
         formatted_history = []
         for msg in recent_history:
@@ -100,7 +86,6 @@ class RAGService:
         else:
             search_query = question
 
-        # Execute Hybrid RRF Retrieval (Vector + BM25)
         documents = retrieve_documents(
             vector_store=self.vector_store,
             all_docs=None,
@@ -111,7 +96,6 @@ class RAGService:
 
         context = build_context_from_documents(documents)
 
-        # Token Optimization: Only pass the pruned recent history into final generation prompt
         recent_history = chat_history[-(self.MAX_HISTORY_TURNS * 2):]
         formatted_history = []
         for msg in recent_history:
@@ -131,7 +115,6 @@ class RAGService:
         used_chunks = []
         for chunk_id in response.chunk_ids:
             try:
-                # Expecting format 'chunk_0', 'chunk_1', etc.
                 idx = int(chunk_id.split('_')[1])
                 if 0 <= idx < len(documents):
                     doc, score = documents[idx]

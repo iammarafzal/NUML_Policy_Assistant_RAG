@@ -5,11 +5,9 @@ from rag.service import RAGService
 from middleware import setup_middleware, limiter
 
 app = Flask(__name__)
-# Allow CORS from the configured FRONTEND_URL (defaults to allowing all if not set, for local dev)
 frontend_url = os.environ.get("FRONTEND_URL", "*")
 CORS(app, origins=[frontend_url] if frontend_url != "*" else "*")
 
-# Setup middleware (ProxyFix, Limiter, Error Handlers)
 setup_middleware(app)
 
 rag = RAGService()
