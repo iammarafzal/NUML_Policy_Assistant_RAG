@@ -12,17 +12,18 @@ This is a Retrieval-Augmented Generation (RAG) application designed to assist st
 - **Backend:** Python, Flask
 - **AI / LLM:** LangChain, Google Gemini (`gemini-3.1-flash-lite`), HuggingFace Embeddings (`BAAI/bge-small-en-v1.5`)
 - **Database:** ChromaDB (Local & Cloud)
-- **Frontend:** Vanilla JavaScript, HTML5, CSS3, Marked.js (for Markdown rendering)
+- **Frontend:** React, Vite, TailwindCSS, ReactMarkdown
 
 ## Setup Instructions
 
-1. Clone the repository and set up your virtual environment:
+1. Clone the repository and navigate to the backend directory:
    ```bash
+   cd backend
    python -m venv .venv
    source .venv/bin/activate  # Or .venv\Scripts\activate on Windows
    ```
 
-2. Install dependencies:
+2. Install backend dependencies:
    ```bash
    pip install -r requirements.txt
    ```
@@ -35,12 +36,20 @@ This is a Retrieval-Augmented Generation (RAG) application designed to assist st
 
 4. Run the data ingestion script (only needed to build the database from scratch):
    ```bash
-   python -m ingestion.ingest
+   python ingest_to_chroma_cloud.py
    ```
 
 5. Run the Flask application locally:
    ```bash
    python app.py
+   ```
+
+6. Setup and run the frontend:
+   Open a new terminal and navigate to the `frontend` directory.
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
    ```
 
 ## Production Deployment (Render)
