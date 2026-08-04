@@ -83,10 +83,12 @@
   border: 1px solid var(--border, #e2e8f0);
   padding: 8px 12px;
   text-align: left;
+  color: #1e293b;
 }
 .dark .markdown-body th,
 .dark .markdown-body td {
   border-color: #475569;
+  color: inherit;
 }
 
 .markdown-body th {

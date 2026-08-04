@@ -267,28 +267,28 @@ export default function ChatInterface() {
                       components={{
                         p: ({node, ...props}) => <p className="my-2 leading-relaxed" {...props} />,
                         table: ({ node, ...props }) => (
-                          <div className="my-4 w-full overflow-hidden rounded-none border border-white/20 bg-white/5 shadow-sm">
+                          <div className="my-4 w-full overflow-hidden rounded-none border border-slate-200 dark:border-white/20 bg-slate-50 dark:bg-white/5 shadow-sm">
                             <table className="w-full border-collapse border-spacing-0 text-left text-sm !m-0 !p-0" {...props} />
                           </div>
                         ),
                         thead: ({ node, ...props }) => (
-                          <thead className="bg-white/10 !m-0 !p-0" {...props} />
+                          <thead className="bg-slate-100 dark:bg-white/10 !m-0 !p-0" {...props} />
                         ),
                         tbody: ({ node, ...props }) => (
-                          <tbody className="divide-y divide-white/10 !m-0 !p-0" {...props} />
+                          <tbody className="divide-y divide-slate-200 dark:divide-white/10 !m-0 !p-0" {...props} />
                         ),
                         tr: ({ node, ...props }) => (
-                          <tr className="even:bg-white/[0.02] hover:bg-white/[0.04] transition-colors !m-0 !p-0" {...props} />
+                          <tr className="even:bg-slate-50 dark:even:bg-white/[0.02] hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-colors !m-0 !p-0" {...props} />
                         ),
                         th: ({ node, ...props }) => (
                           <th
-                            className="border-b border-r border-white/20 last:border-r-0 px-4 py-2.5 font-semibold text-white tracking-wider align-middle"
+                            className="border-b border-r border-slate-200 dark:border-white/20 last:border-r-0 px-4 py-2.5 font-semibold text-slate-800 dark:text-white tracking-wider align-middle"
                             {...props}
                           />
                         ),
                         td: ({ node, ...props }) => (
                           <td
-                            className="border-b border-r border-white/10 last:border-r-0 px-4 py-2.5 text-gray-200 align-middle"
+                            className="border-b border-r border-slate-200 dark:border-white/10 last:border-r-0 px-4 py-2.5 text-slate-700 dark:text-gray-200 align-middle"
                             {...props}
                           />
                         ),
